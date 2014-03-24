@@ -1,21 +1,8 @@
-{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE RecordWildCards #-}
 
 module Chapter3.FirstFolds where
 
-data PersonR = PersonR { firstName :: String
-                    , lastName :: String
-                    } deriving Show
-
-data ClientR = GovOrgR { clientRName :: String}
-          | CompanyR { clientRName :: String
-                    , companyId :: Integer
-                    , person :: PersonR
-                    , duty :: String
-                    }
-          | IndividualR { person :: PersonR }
-          deriving Show
+import Chapter3.Model
 
 myproduct :: [Integer] -> Integer
 myproduct [] = 1
@@ -23,14 +10,6 @@ myproduct (x:xs) = x * myproduct xs
 
 myproductFold :: [Integer] -> Integer
 myproductFold = foldr (*) 1
-
-clientName :: ClientR -> String
-clientName GovOrgR { .. } = clientRName
-clientName CompanyR { .. } = clientRName
-clientName IndividualR { person = PersonR { ..} } = firstName ++ " " ++ lastName
-
-clients :: [ClientR]
-clients = [GovOrgR "NASA", CompanyR "Google" 1 (PersonR "Erich" "Smidth") "CEO", GovOrgR "NSA", IndividualR (PersonR "Carmine" "Moleti"), CompanyR "FrigoCaserta srl" 2 (PersonR "Paolo" "Salzillo") "CEO", IndividualR (PersonR "Anna" "Del Prete"), IndividualR (PersonR "Mr." "X"), IndividualR (PersonR "Enrico" "Moleti")]
 
 minClientAcc :: String -> [ClientR] -> String
 minClientAcc cur clis
