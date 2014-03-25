@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  -- exposed-modules:     
+  exposed-modules:     Chapter4.Containers, Chapter4.Model 
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.7, containers >=0.5 && <0.6

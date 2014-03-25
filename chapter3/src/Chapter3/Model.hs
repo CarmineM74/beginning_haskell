@@ -40,3 +40,4 @@ isCompany :: ClientR -> Bool
 isCompany (CompanyR {}) = True
 isCompany _ = False
 
+data ClientKind = GovOrgKind | CompanyKind | IndividualKind
