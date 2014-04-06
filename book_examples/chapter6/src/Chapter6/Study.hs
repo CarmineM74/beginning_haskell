@@ -60,8 +60,28 @@ clusterAssignmentPhase centroids points = foldr closerCentroid initialMap points
 newCentroidsPhase :: (Vector v, Vectorizable e v) => M.Map v [e] -> [(v,v)]
 newCentroidsPhase m = M.toList $ fmap (centroid . map toVector) m
 
-kMeans :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -- Initial vectors generator
-                                        -> [e]                -- the information
-                                        -> [v]                -- new centroids after convergence
+shouldStop :: (Vector v) => [(v,v)] -> Double -> Bool
+shouldStop centroids threshold = foldr f 0.0 centroids < threshold
+  where
+    f (x,y) s = s + distance x y
 
-kMeans = undefined
+kMeans :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -- Initial vectors generator
+                                        -> Int                -- number of centroids
+                                        -> [e]                -- the information
+                                        -> Double             -- threshold
+                                        -> (Int,[v])          -- new centroids after convergence
+
+kMeans i k points = kMeans' (i k points) points 0
+
+kMeans' :: (Vector v, Vectorizable e v) => [v] -> [e] -> Int -> Double -> (Int,[v])
+kMeans' centroids points steps threshold = if shouldStop oldNewCentroids threshold
+                                      then (steps,newCentroids)
+                                      else kMeans' newCentroids points (steps+1) threshold
+                                  where
+                                    assignments = clusterAssignmentPhase centroids points
+                                    oldNewCentroids = newCentroidsPhase assignments
+                                    newCentroids = map snd oldNewCentroids
+
+initializeSimple :: Int -> [e] -> [(Double,Double)]
+initializeSimple 0 _ = []
+initializeSimple n v = (fromIntegral n, fromIntegral n) : initializeSimple (n-1) v
