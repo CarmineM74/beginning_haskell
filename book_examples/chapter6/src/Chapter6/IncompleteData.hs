@@ -30,6 +30,11 @@ purchaseValue purchaseId =
   priceByProductId productId         `thenDo` (\price ->
   Just $ fromInteger n * price       )))
 
+purchaseValue' :: Integer -> Maybe Double
+purchaseValue' purchaseId = numberItemsByPurchaseId purchaseId 
+                              >>= (\n -> productIdByPurchaseId purchaseId
+                              >>= priceByProductId 
+                              >>= (\price -> return $ fromInteger (n*price)))
 
 purchasesByClientId :: Integer -> [Integer]
 purchasesByClientId = error "Unimplemented"
