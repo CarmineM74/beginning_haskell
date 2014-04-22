@@ -11,3 +11,6 @@ instance Monoid m => Monad (MyWriter m) where
   (>>=) (MyWriter (x,s)) f = MyWriter (y,mappend s s')
                             where
                               MyWriter (y,s') = f x 
+
+myTell :: Monoid m => m -> MyWriter m () 
+myTell x = MyWriter ((),x)

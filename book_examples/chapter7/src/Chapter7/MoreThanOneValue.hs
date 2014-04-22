@@ -12,3 +12,7 @@ brokenJumps :: Integer -> Integer -> [Integer]
 brokenJumps n year = brokenJumps' n [year]
   where brokenJumps' 0 years = years
         brokenJumps' i years = years >>= brokenJumps' (i-1) . brokenJump
+
+-- Ex 7.2
+find_ :: (a -> Bool) -> [a] -> Maybe a
+find_ p = msum $ map (\x -> if p x then Just x else Nothing)
